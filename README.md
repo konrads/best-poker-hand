@@ -1,9 +1,10 @@
 ### Brief
 
+[![build](../../workflows/build/badge.svg)](../../actions/workflows/build.yml)
+
 Pick the best hand(s) from a list of poker hands.
 
-See [wikipedia](https://en.wikipedia.org/wiki/List_of_poker_hands) for an
-overview of poker hands.
+See [wikipedia](https://en.wikipedia.org/wiki/List_of_poker_hands) for an overview of poker hands.
 
 ## Hints
 
@@ -14,7 +15,6 @@ overview of poker hands.
 - Rust provides the [`PartialOrd` trait](https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html) to handle the case of sortable things which do not have a total order. However, it doesn't provide a standard `sort` method for `Vec<T> where T: PartialOrd`. The standard idiom to sort a vector in this case is `your_vec.sort_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::{Less|Equal|Greater}));`, depending on your needs.
 - You might consider implementing a type representing a poker hand which implements `PartialOrd`.
 
-
 ### Writing the Code
 
 Execute the tests with:
@@ -23,11 +23,7 @@ Execute the tests with:
 $ cargo test
 ```
 
-All but the first test have been ignored. After you get the first test to
-pass, open the tests source file which is located in the `tests` directory
-and remove the `#[ignore]` flag from the next test and get the tests to pass
-again. Each separate test is a function with `#[test]` flag above it.
-Continue, until you pass every test.
+All but the first test have been ignored. After you get the first test to pass, open the tests source file which is located in the `tests` directory and remove the `#[ignore]` flag from the next test and get the tests to pass again. Each separate test is a function with `#[test]` flag above it. Continue, until you pass every test.
 
 If you wish to run all ignored tests without editing the tests source file, use:
 
@@ -49,8 +45,7 @@ $ cargo test some_test -- --ignored
 
 To learn more about Rust tests refer to the [online test documentation][rust-tests]
 
-Make sure to read the [Modules][modules] chapter if you
-haven't already, it will help you with organizing your files.
+Make sure to read the [Modules][modules] chapter if you haven't already, it will help you with organizing your files.
 
 ## Further improvements
 
@@ -74,12 +69,31 @@ cargo clippy --all-targets
 - Correctness: does the functionality act in sensible, thought-out ways?
 - Maintainability: is it written in a clean, maintainable way?
 
-
 ### CodeSubmit
 
-Please organize, design, and document your code as if it were going into production - then push your changes 
-to the master branch. After you have pushed your code, you may submit the assignment on the assignment page.
+Please organize, design, and document your code as if it were going into production - then push your changes to the master branch. After you have pushed your code, you may submit the assignment on the assignment page.
 
 All the best and happy coding,
 
 The CipherStash Team
+
+### Implementation
+
+This crate provides representations of Cards, poker hands, and means of finding a winner amongst the hands.
+
+The flow is to convert whitespace separated list of cards to Hands (eg Flush, 2 pairs), which can be compared to find the winner.
+
+#### Example
+
+```rust
+use poker::prelude::*;
+let hands = [
+  "3S 3H 2S 3D 4C",
+  "3S 3H 2S 3D 5C",
+  "3S 3H 2S 3D 6C",
+  "3S 3H 2S 3D 7C",
+];
+
+let winners = winning_hands(&hands).unwrap();
+assert_eq!(winners, vec!["3S 3H 2S 3D 7C"]);
+```
