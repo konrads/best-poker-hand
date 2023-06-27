@@ -4,6 +4,23 @@ use crate::{
 };
 use std::collections::{BTreeSet, HashMap, HashSet};
 
+/// Module containing utility functions for converting Card array -> Hand, and finding the winning hands.
+///
+/// Given an array of cards, match it to a Hand.
+///
+/// # Example
+/// ```rust
+/// use poker::prelude::*;
+/// let cards: [Card; 5] = [
+///   "3S".parse().unwrap(),
+///   "3H".parse().unwrap(),
+///   "2S".parse().unwrap(),
+///   "3D".parse().unwrap(),
+///   "3C".parse().unwrap(),
+/// ];
+/// let hand = to_hand(cards);
+/// assert_eq!(hand, Hand::FourOfAKind { quad: Rank::Three, remaining: Rank::Two });
+/// ```
 pub fn to_hand(cards: [Card; 5]) -> Hand {
     let mut ranks = Vec::with_capacity(5);
     let mut unique_suits = HashSet::new();
@@ -73,6 +90,21 @@ pub fn to_hand(cards: [Card; 5]) -> Hand {
     }
 }
 
+/// Given an array of hand representations, convert them to Cards, then Hand, obtain the winner(s).
+///
+/// # Example
+/// ```rust
+/// use poker::prelude::*;
+/// let hands = [
+///   "3S 3H 2S 3D 4C",
+///   "3S 3H 2S 3D 5C",
+///   "3S 3H 2S 3D 6C",
+///   "3S 3H 2S 3D 7C",
+/// ];
+///
+/// let winners = find_winners(&hands).unwrap();
+/// assert_eq!(winners, vec!["3S 3H 2S 3D 7C"]);
+/// ```
 pub fn find_winners<'a>(hands_str: &[&'a str]) -> Result<Vec<&'a str>, ParseError> {
     let mut winners_str = Vec::new();
     let mut winner: Option<Hand> = None;

@@ -1,3 +1,5 @@
+/// Module for error definitions.
+
 /// Errors typical to parsing of Cards/Hands.
 #[derive(thiserror::Error, Debug)]
 pub enum ParseError {

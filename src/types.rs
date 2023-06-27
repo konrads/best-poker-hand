@@ -4,6 +4,10 @@ use std::str::FromStr;
 
 use crate::errors::ParseError;
 
+/// Module defining types used in the poker game.
+///
+/// Includes conversions from strings to types.
+
 // Enum to represent card ranks
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone)]
 pub enum Rank {
