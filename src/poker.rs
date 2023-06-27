@@ -21,7 +21,15 @@ pub fn to_hand(cards: [Card; 5]) -> Hand {
 
     let high = ranks[4];
     let low = ranks[0];
-    let is_straight = low as u8 + 4 == high as u8 && count_by_rank.len() == 5;
+    let is_ace_leading_straight =
+        ranks == vec![Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Ace];
+    let is_straight =
+        (low as u8 + 4 == high as u8 && count_by_rank.len() == 5) || is_ace_leading_straight;
+    let high = if is_ace_leading_straight {
+        ranks[3]
+    } else {
+        high
+    }; // redefine high if ace leads a straight
     let is_flush = unique_suits.len() == 1;
     match (is_straight, is_flush) {
         (true, true) => Hand::StraightFlush { high },
