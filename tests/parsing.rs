@@ -8,7 +8,6 @@ use poker::prelude::{find_winners, Card, ParseError};
 #[case::test_too_few_cards(&["3S 3H 2S"], "invalid Card count 3")]
 #[case::test_invalid_suit(&["3S 3H 2S 3H 6X"], "invalid Suit X")]
 #[case::test_invalid_rank(&["3S 3H 2S 3H 666H"], "invalid Rank 666")]
-// #[ignore]
 fn test_parsing_hand(#[case] hands: &[&str], #[case] exp_err: &str) {
     let err = find_winners(hands).expect_err("Unexpected parse success");
     assert_eq!(err.to_string(), exp_err);

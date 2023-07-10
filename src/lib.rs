@@ -13,7 +13,7 @@ pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
     match find_winners(hands) {
         Ok(winners) => Some(winners),
         Err(e) => {
-            println!("failed to parse hands due to {}", e);
+            println!("failed to parse hands due to {e}");
             None
         }
     }

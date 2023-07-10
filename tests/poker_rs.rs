@@ -42,7 +42,6 @@ use poker::winning_hands;
 #[case::test_four_of_a_kind_cascade(&["3S 3H 2S 3D 3C", "3S 3H 4S 3D 3C"], &["3S 3H 4S 3D 3C"])]
 #[case::test_straight_flush_beats_four_of_a_kind(&["4S 5H 5S 5D 5C", "7S 8S 9S 6S 10S"], &["7S 8S 9S 6S 10S"])]
 #[case::test_straight_flush_ranks(&["4S 5H 5S 5D 5C", "2S 3S 4S 5S 6S"], &["2S 3S 4S 5S 6S"])]
-#[ignore]
 fn test_winners(#[case] hands: &[&str], #[case] winners: &[&str]) {
     let res = winning_hands(hands);
     assert_eq!(res.unwrap(), winners.to_vec());

@@ -20,4 +20,4 @@ jobs:
       - name: Clippy
         run: cargo clippy --all-targets --verbose -- -D warnings
       - name: Test
-        run: cargo test  --verbose -- --ignored
+        run: cargo test  --verbose
