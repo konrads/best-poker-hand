@@ -2,7 +2,10 @@ use crate::{
     errors::ParseError,
     types::{Card, Hand, Rank},
 };
-use std::collections::{BTreeSet, HashMap, HashSet};
+use std::{
+    collections::{BTreeSet, HashMap, HashSet},
+    iter,
+};
 
 /// Module containing utility functions for converting Card array -> Hand, and finding the winning hands.
 ///
@@ -106,26 +109,27 @@ pub fn to_hand(cards: [Card; 5]) -> Hand {
 /// assert_eq!(winners, vec!["3S 3H 2S 3D 7C"]);
 /// ```
 pub fn find_winners<'a>(hands_str: &[&'a str]) -> Result<Vec<&'a str>, ParseError> {
-    let mut winners_str = Vec::new();
-    let mut winner: Option<Hand> = None;
+    // get hands in iterative manner, allowing for early return on error
+    let mut cards_and_hands = Vec::new();
     for &hand_str in hands_str {
         let cards = Card::five_cards_from_str(hand_str)?;
         let hand = to_hand(cards);
-        match winner {
-            None => {
-                winner = Some(hand);
-                winners_str.push(hand_str);
-            }
-            Some(ref w) if hand > *w => {
-                winner = Some(hand);
-                winners_str.clear();
-                winners_str.push(hand_str);
-            }
-            Some(ref w) if hand == *w => {
-                winners_str.push(hand_str);
-            }
-            _ => {} // lesser hand, ignore
-        }
+        cards_and_hands.push((hand_str, hand))
     }
-    Ok(winners_str)
+
+    // sort by hand, descending
+    cards_and_hands.sort_unstable_by(|(_, a), (_, b)| b.cmp(a));
+
+    // find all winners
+    let mut iter = cards_and_hands.into_iter();
+    if let Some(first_winner) = iter.next() {
+        let other_winners = iter
+            .take_while(|(_, hand)| hand == &first_winner.1)
+            .map(|(hand_str, _)| hand_str);
+        Ok(iter::once(first_winner.0)
+            .chain(other_winners)
+            .collect::<Vec<_>>())
+    } else {
+        Ok(vec![])
+    }
 }
